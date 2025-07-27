@@ -6,7 +6,7 @@
 #include <rtdevice.h>
 #include <string.h>
 
-#define BTN_NAME_MAX  32     //名字最大为32字节
+#define BTN_NAME_MAX  32     //鍚嶅瓧鏈�澶т负32瀛楄妭
 
 /* 
  The button debounce time is 40ms, the recommended calling period is 20ms.

@@ -11,6 +11,10 @@
 
 #include "button.h"
 
+#define DBG_TAG "button"
+#define DBG_LVL DBG_LOG
+#include <rtdbg.h>
+
 #ifdef PKG_USING_BUTTON
 
 /*******************************************************************
@@ -49,7 +53,7 @@ void Button_Create(const char *name,
 {
   if( btn == RT_NULL)
   {
-    RT_DEBUG_LOG(RT_DEBUG_THREAD,("struct button is RT_NULL!"));
+    LOG_D("struct button is RT_NULL!");
   }
   
   memset(btn, 0, sizeof(struct button));      //Clear structure information
@@ -65,8 +69,8 @@ void Button_Create(const char *name,
   btn->Button_Last_Level = btn->Read_Button_Level();    //Button current level
   btn->Debounce_Time = 0;
   
-  RT_DEBUG_LOG(RT_DEBUG_THREAD,("button create success!"));
-  
+  LOG_D("button create success!");
+
   Add_Button(btn);          //Added to the singly linked list when button created
   
   Print_Btn_Info(btn);      //printf info
@@ -88,7 +92,7 @@ void Button_Attach(Button_t *btn,Button_Event btn_event,Button_CallBack btn_call
 {
   if( btn == RT_NULL)
   {
-    RT_DEBUG_LOG(RT_DEBUG_THREAD,("struct button is RT_NULL!"));
+    LOG_D("struct button is RT_NULL!");
   }
   
   if(BUTTON_ALL_RIGGER == btn_event)
@@ -146,7 +150,7 @@ void Get_Button_EventInfo(Button_t *btn)
     if(btn->CallBack_Function[i] != 0)
     {
       /* print */
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Button_Event:%d",i));
+      LOG_D("Button_Event:%d",i);
     }      
   } 
 }
@@ -212,7 +216,7 @@ void Button_Cycle_Process(Button_t *btn)
       else if(btn->Button_State == BUTTON_DOWM)
       {
         btn->Button_State = BUTTON_UP;
-        RT_DEBUG_LOG(RT_DEBUG_THREAD,("button release"));
+        LOG_D("button release");
       }
   }
   
@@ -232,7 +236,7 @@ void Button_Cycle_Process(Button_t *btn)
           btn->Button_Trigger_Event = BUTTON_CONTINUOS; 
           /* continuous triggering */
           TRIGGER_CB(BUTTON_CONTINUOS);                      
-          RT_DEBUG_LOG(RT_DEBUG_THREAD,("continuous triggering"));
+          LOG_D("continuous triggering");
         }
         
         #else
@@ -264,7 +268,7 @@ void Button_Cycle_Process(Button_t *btn)
           {
             btn->Long_Time = BUTTON_LONG_TIME;
           }
-          RT_DEBUG_LOG(RT_DEBUG_THREAD,("Long press"));
+          LOG_D("Long press");
         }
           
         #endif
@@ -284,7 +288,7 @@ void Button_Cycle_Process(Button_t *btn)
         {
           btn->Button_Trigger_Event = BUTTON_DOUBLE;
           TRIGGER_CB(BUTTON_DOUBLE);    
-          RT_DEBUG_LOG(RT_DEBUG_THREAD,("double click"));
+          LOG_D("double click");
           btn->Button_State = NONE_TRIGGER;
           btn->Button_Last_State = NONE_TRIGGER;
         }
@@ -399,7 +403,7 @@ void Search_Button(void)
   struct button* pass_btn;
   for(pass_btn = Head_Button; pass_btn != RT_NULL; pass_btn = pass_btn->Next)
   {
-    RT_DEBUG_LOG(RT_DEBUG_THREAD,("button node have %s",pass_btn->Name));
+    LOG_D("button node have %s",pass_btn->Name);
   }
 }
 
@@ -421,43 +425,43 @@ void Button_Process_CallBack(void *btn)
   {
     case BUTTON_DOWM:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your press trigger"));
+      LOG_D("Add processing logic for your press trigger");
       break;
     }
     
     case BUTTON_UP:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your trigger release"));
+      LOG_D("Add processing logic for your trigger release");
       break;
     }
     
     case BUTTON_DOUBLE:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your double-click trigger"));
+      LOG_D("Add processing logic for your double-click trigger");
       break;
     }
     
     case BUTTON_LONG:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your long press trigger"));
+      LOG_D("Add processing logic for your long press trigger");
       break;
     }
     
     case BUTTON_LONG_FREE:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your long press trigger free"));
+      LOG_D("Add processing logic for your long press trigger free");
       break;
     }
     
     case BUTTON_CONTINUOS:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add your continuous trigger processing logic"));
+      LOG_D("Add your continuous trigger processing logic");
       break;
     }
     
     case BUTTON_CONTINUOS_FREE:
     {
-      RT_DEBUG_LOG(RT_DEBUG_THREAD,("Add processing logic for your continuous trigger release"));
+      LOG_D("Add processing logic for your continuous trigger release");
       break;
     }
       
@@ -508,8 +512,7 @@ static char *StrnCopy(char *dst, const char *src, rt_uint32_t n)
   ***********************************************************/
 static void Print_Btn_Info(Button_t* btn)
 {
-  
-  RT_DEBUG_LOG(RT_DEBUG_THREAD,("button struct information:\n\
+  LOG_D("button struct information:\n\
               btn->Name:%s \n\
               btn->Button_State:%d \n\
               btn->Button_Trigger_Event:%d \n\
@@ -520,7 +523,7 @@ static void Print_Btn_Info(Button_t* btn)
               btn->Button_State,
               btn->Button_Trigger_Event,
               btn->Button_Trigger_Level,
-              btn->Button_Last_Level));
+              btn->Button_Last_Level);
   Search_Button();
 }
 /************************************************************
